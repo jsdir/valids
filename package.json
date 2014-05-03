@@ -21,5 +21,9 @@
   "homepage": "https://github.com/jsdir/valids",
   "devDependencies": {
     "mocha": "~1.18.2"
+  },
+  "dependencies": {
+    "underscore.string": "~2.3.3",
+    "lodash": "~2.4.1"
   }
 }
