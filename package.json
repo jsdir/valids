@@ -1,0 +1,25 @@
+{
+  "name": "valids",
+  "version": "0.0.0",
+  "description": "useful validators for node.js and the browser",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jsdir/valids.git"
+  },
+  "keywords": [
+    "validators"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jsdir/valids/issues"
+  },
+  "homepage": "https://github.com/jsdir/valids",
+  "devDependencies": {
+    "mocha": "~1.18.2"
+  }
+}
