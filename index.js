@@ -9,7 +9,7 @@ function pluralize(amount, word) {
 }
 
 var patterns = {
-  postal_code:  /^\d{5}(-\d{4})?$/,
+  postal_code: /^\d{5}(-\d{4})?$/,
   email: /^\S+@\S+\.\S+$/
 }
 
