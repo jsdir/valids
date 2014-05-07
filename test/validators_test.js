@@ -9,14 +9,12 @@ function validatorAssert(validator, value, param, result) {
 describe('validators', function() {
 
   it('should validate "required"', function() {
+    var message = 'parameter "name" is required'
     validatorAssert('required', 'value', false, null);
     validatorAssert('required', 'value', true, null);
-    validatorAssert('required', null, true,
-      'parameter "name" is required');
-    validatorAssert('required', undefined, true,
-      'parameter "name" is required');
-    validatorAssert('required', '', true,
-      'parameter "name" is required');
+    validatorAssert('required', null, true, message);
+    validatorAssert('required', undefined, true, message);
+    validatorAssert('required', '', true, message);
   });
 
   it('should validate "min"', function() {
@@ -46,24 +44,20 @@ describe('validators', function() {
   });
 
   it('should validate "email"', function() {
+    var message = 'parameter "name" must be a valid email address';
     validatorAssert('email', 'fake-email', false, null);
-    validatorAssert('email', 'fake-email', true,
-      'parameter "name" must be a valid email address');
-    validatorAssert('email', 'johndoe@example', true,
-      'parameter "name" must be a valid email address');
-    validatorAssert('email', 'johndoe@example.', true,
-      'parameter "name" must be a valid email address');
+    validatorAssert('email', 'fake-email', true, message);
+    validatorAssert('email', 'johndoe@example', true, message);
+    validatorAssert('email', 'johndoe@example.', true, message);
     validatorAssert('email', 'johndoe@example.com', true, null);
   });
 
   it('should validate "postal_code"', function() {
+    var message = 'parameter "name" must be a valid postal code'
     validatorAssert('postal_code', '1234', false, null);
-    validatorAssert('postal_code', '1234', true,
-      'parameter "name" must be a valid postal code');
-    validatorAssert('postal_code', '123456', true,
-      'parameter "name" must be a valid postal code');
-    validatorAssert('postal_code', '12345-12345', true,
-      'parameter "name" must be a valid postal code');
+    validatorAssert('postal_code', '1234', true, message);
+    validatorAssert('postal_code', '123456', true, message);
+    validatorAssert('postal_code', '12345-12345', true, message);
     validatorAssert('postal_code', '12345', true, null);
     validatorAssert('postal_code', '12345-6789', true, null);
   });
