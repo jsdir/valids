@@ -67,4 +67,14 @@ describe('validators', function() {
     validatorAssert('postal_code', '12345', true, null);
     validatorAssert('postal_code', '12345-6789', true, null);
   });
+
+  it('should validate "username"', function() {
+    var message = 'parameter "name" must only contain letters, numbers, ' +
+      'periods, dashes, and underscores';
+    validatorAssert('username', 'validUsername', false, null);
+    validatorAssert('username', 'validUsername', true, null);
+    validatorAssert('username', 'a1.-_', true, null);
+    validatorAssert('username', 'a1.-_!', true, message);
+    validatorAssert('username', ' ', true, message);
+  });
 });

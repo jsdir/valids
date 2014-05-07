@@ -10,7 +10,8 @@ function pluralize(amount, word) {
 
 var patterns = {
   postal_code: /^\d{5}(-\d{4})?$/,
-  email: /^\S+@\S+\.\S+$/
+  email: /^\S+@\S+\.\S+$/,
+  username: /^[a-zA-Z0-9-_\.]+$/
 }
 
 module.exports = {
@@ -48,6 +49,12 @@ module.exports = {
   postal_code: function(name, value, active) {
     if (active && !patterns.postal_code.test(value)) {
       return 'parameter "' + name + '" must be a valid postal code';
+    }
+  },
+  username: function(name, value, active) {
+    if (active && !patterns.username.test(value)) {
+      return 'parameter "' + name + '" must only contain letters, numbers, ' +
+        'periods, dashes, and underscores';
     }
   }
 };
