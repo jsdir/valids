@@ -14,47 +14,60 @@ var patterns = {
   username: /^[a-zA-Z0-9-_\.]+$/
 }
 
+templates = {
+  required: _.template('parameter "<%= name %>" is required'),
+  min: _.template('parameter "<%= name %>" must have a minimum of <%= min %>'),
+  max: _.template('parameter "<%= name %>" must have a maximum of <%= max %>'),
+  in: _.template('parameter "<%= name %>" must be <%= choices %>'),
+  email: _.template('parameter "<%= name %>" must be a valid email address'),
+  postal_code: _.template('parameter "<%= name %>" must be a valid postal ' +
+    'code'),
+  username: _.template('parameter "<%= name %>" must only contain letters, ' +
+    'numbers, periods, dashes, and underscores')
+}
+
 module.exports = {
-  required: function(name, value, active) {
+  required: function(name, value, active, template) {
     if (active && !value) {
-      return 'parameter "' + name + '" is required';
+      return (template || templates.required)({name: name});
     }
   },
-  min: function(name, value, min) {
+  min: function(name, value, min, template) {
     if (value.length < min) {
-      return 'parameter "' + name + '" must have a minimum of ' +
-        pluralize(min, 'character');
-    }
-  },
-  max: function(name, value, max) {
-    if (value.length > max) {
-      return 'parameter "' + name + '" must have a maximum of ' +
-        pluralize(max, 'character');
-    }
-  },
-  in: function(name, value, array) {
-    if (!_.contains(array, value)) {
-      var quoted = _.map(array, function(word) {
-        return '"' + word + '"';
+      return (template || templates.min)({
+        name: name,
+        min: pluralize(min, 'character')
       });
-      var sentence = _s.toSentenceSerial(quoted, ', ', ' or ');
-      return 'parameter "' + name + '" must be ' + sentence;
     }
   },
-  email: function(name, value, active) {
+  max: function(name, value, max, template) {
+    if (value.length > max) {
+      return (template || templates.max)({
+        name: name,
+        max: pluralize(max, 'character')
+      });
+    }
+  },
+  in: function(name, value, array, template) {
+    if (!_.contains(array, value)) {
+      var quoted = _.map(array, function(word) {return '"' + word + '"';});
+      var choices = _s.toSentenceSerial(quoted, ', ', ' or ');
+      return (template || templates.in)({choices: choices, name: name});
+    }
+  },
+  email: function(name, value, active, template) {
     if (active && !patterns.email.test(value)) {
-      return 'parameter "' + name + '" must be a valid email address';
+      return (template || templates.email)({name: name});
     }
   },
-  postal_code: function(name, value, active) {
+  postal_code: function(name, value, active, template) {
     if (active && !patterns.postal_code.test(value)) {
-      return 'parameter "' + name + '" must be a valid postal code';
+      return (template || templates.postal_code)({name: name});
     }
   },
-  username: function(name, value, active) {
+  username: function(name, value, active, template) {
     if (active && !patterns.username.test(value)) {
-      return 'parameter "' + name + '" must only contain letters, numbers, ' +
-        'periods, dashes, and underscores';
+      return (template || templates.username)({name: name});
     }
   }
 };
