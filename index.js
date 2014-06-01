@@ -102,7 +102,7 @@ function validateRuleGroup(group, options, value, cb) {
 /**
  * Validates a field and stops validating on first validation failure or error.
  */
-function validateField(fieldData, value. cb) {
+function validateField(fieldData, value, cb) {
   // Get a user-friendly display name for the field.
   var fieldSchema = fieldData.schema;
   var displayName = fieldData.displayName || fieldData.name;
