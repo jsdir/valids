@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var async = require('async');
 var assert = require('assert');
 
 var valids = require('..');
@@ -117,8 +118,41 @@ describe('#validate()', function() {
     });
   });
 
+  it('should validate with custom rule functions', function(done) {
+    var testOptions = {
+      schema: {
+        custom: {
+          rules: {
+            customValidator: function(value, cb) {
+              if (value === 'correct') {
+                cb();
+              } else {
+                cb('customValidator message');
+              }
+            }
+          }
+        }
+      }
+    };
+
+    async.parallel([
+      function(cb) {
+        valids.validate({custom: 'correct'}, testOptions, function(messages) {
+          assert.equal(messages, null);
+          cb();
+        });
+      },
+      function(cb) {
+        valids.validate({custom: 'fail'}, testOptions, function(messages) {
+          assert.deepEqual(messages, {custom: 'customValidator message'});
+          cb();
+        });
+      }
+    ], done);
+  });
+
   it('should use custom messages', function(done) {
-    testOptions = {
+    var testOptions = {
       schema: {
         email: {
           rules: {
