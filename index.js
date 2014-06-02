@@ -135,6 +135,12 @@ function validate(data, options, cb) {
   var valid = true;
   var messages = {};
 
+  if (options.validateAll !== false) {
+    data = _.extend(_.object(_.map(_.keys(options.schema), function(name) {
+      return [name, null];
+    })), data);
+  }
+
   // Validate fields asynchronously. Do not stop on any field-level validation
   // failures.
   async.each(_.keys(data), function(name, cb) {

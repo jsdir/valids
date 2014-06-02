@@ -93,20 +93,22 @@ describe('#validate()', function() {
 
   var options = {schema: schema};
 
-  it('should not validate fields that do not exist', function(done) {
+  it('should validate nonexistent fields by default', function(done) {
+    var testOptions = {schema: schema};
     valids.validate({}, options, function(messages) {
-      assert.equal(messages, null);
-      done();
-    });
-  });
-
-  it('should validate the required rule for fields set ' +
-    'null', function(done) {
-    valids.validate({name: null, email: null}, options, function(messages) {
       assert.deepEqual(messages, {
         name: 'parameter "name" is required',
         email: 'parameter "email" is required'
       });
+      done();
+    });
+  });
+
+  it('should not validate nonexistent fields when validateAll is set ' +
+    'to false', function(done) {
+    var testOptions = {schema: schema, validateAll: false};
+    valids.validate({}, testOptions, function(messages) {
+      assert.equal(messages, null);
       done();
     });
   });
