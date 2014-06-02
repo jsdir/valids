@@ -88,7 +88,12 @@ function validateRuleGroup(group, options, value, cb) {
       param(value, cb);
     } else {
       var message = null;
-      var messageTemplate = options.messages[ruleName];
+      var messageTemplate = null;
+
+      if (options.messages) {
+        messageTemplate = options.messages[ruleName];
+      }
+
       message = rules[ruleName](displayName, value, param, messageTemplate);
       cb(message);
     }
