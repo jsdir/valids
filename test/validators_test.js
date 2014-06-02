@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var assert = require('assert');
 
 var valids = require('..');
@@ -70,5 +71,51 @@ describe('validators', function() {
     validatorAssert('username', 'a1.-_', true, null);
     validatorAssert('username', 'a1.-_!', true, message);
     validatorAssert('username', ' ', true, message);
+  });
+});
+
+describe('#validate()', function() {
+
+  var schema = {
+    name: {
+      rules: {
+        required: true
+      }
+    },
+    email: {
+      rules: {
+        required: true,
+        email: true
+      }
+    }
+  };
+
+  var options = {schema: schema};
+
+  it('not validate fields that do not exist', function(done) {
+    valids.validate({}, options, function(messages) {
+      assert.equal(messages, null);
+      done();
+    });
+  });
+
+  it('should use custom messages', function(done) {
+    testOptions = {
+      schema: {
+        email: {
+          rules: {
+            email: true
+          }
+        }
+      },
+      messages: {
+        email: _.template('field "<%= name %>" failed')
+      }
+    };
+
+    valids.validate({email: 'fake'}, testOptions, function(messages) {
+      assert.deepEqual(messages, {email: 'field "email" failed'});
+      done();
+    });
   });
 });

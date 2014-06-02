@@ -82,75 +82,65 @@ function validateRuleGroup(group, options, value, cb) {
   var displayName = options.displayName;
   var messages = options.messages;
 
-  async.eachSeries(_.keys(group), function(ruleName, cb) {
+  async.each(_.keys(group), function(ruleName, cb) {
     var param = group[ruleName];
     if (_.isFunction(param)) {
-      param(value, function(err, message) {
-        // Treat both validation errors and normal failures as errors sine they
-        // both need to stop the asynchronous iteration immediately.
-        cb(err || message);
-      });
+      param(value, cb);
     } else {
       var message = null;
-      var messageTemplate = templates[ruleName];
+      var messageTemplate = options.messages[ruleName];
       message = rules[ruleName](displayName, value, param, messageTemplate);
       cb(message);
     }
-  });
+  }, cb);
 }
 
 /**
  * Validates a field and stops validating on first validation failure or error.
  */
-function validateField(fieldData, value, cb) {
+function validateField(field, options, cb) {
   // Get a user-friendly display name for the field.
-  var fieldSchema = fieldData.schema;
-  var displayName = fieldData.displayName || fieldData.name;
+  var displayName = field.displayName || field.name;
 
   // Get an array of rules grouped by priority with first and last in the
   // array corresponding to first and last in validation order.
   var rules = [];
-  if (_.isArray(fieldSchema.rules)) {
-    rules = fieldSchema.rules;
-  } else if (fieldSchema.rules) {
-    rules = [fieldSchema.rules];
+  if (_.isArray(field.schema.rules)) {
+    rules = field.schema.rules;
+  } else if (field.schema.rules) {
+    rules = [field.schema.rules];
   }
 
   // Validate individual rule groups synchronously.
   async.eachSeries(rules, function(group, cb) {
     validateRuleGroup(group, {
       displayName: displayName,
-      messages: fieldData.messages
-    }, value, cb);
+      messages: options.messages
+    }, field.value, cb);
   }, cb);
 }
 
 /**
- * Validates all values in data against the fields given in the schema.
+ * Validates all values in the data against the fields given in the schema.
  *
  * This function can be used to validate single fields by letting `data` be a
  * single key-value pair.
- *
- * @param {object} data - The data to validate.
- * @param {object} schema - The schema to validate against.
  */
-function validate(data, schema) {
+function validate(data, options, cb) {
   var valid = true;
   var messages = {};
 
   // Validate fields asynchronously. Do not stop on any field-level validation
   // failures.
-  var fieldNames = _.keys(data);
-  async.each(fieldNames, function(fieldName, cb) {
-    var fieldSchema = formData.schema[fieldName];
-    var fieldData = {
-      schema: fieldSchema,
-      name: fieldName
-    };
-    validateField(fieldData, data[fieldName], function(message) {
+  async.each(_.keys(data), function(name, cb) {
+    validateField({
+      schema: options.schema[name],
+      name: name,
+      value: data[name]
+    }, options, function(message) {
       if (message) {
         valid = false;
-        messages[fieldName] = message;
+        messages[name] = message;
       }
       cb();
     });
@@ -158,8 +148,7 @@ function validate(data, schema) {
     if (valid) {
       cb(null, data);
     } else {
-      var messageField = _.first(_.intersection(fieldNames, _.keys(messages)));
-      cb(messages, data, messages[messageField]);
+      cb(messages);
     }
   });
 }

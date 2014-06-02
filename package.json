@@ -4,7 +4,8 @@
   "description": "useful validators for node.js and the browser",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha -R spec",
+    "watch-test": "mocha -w -R spec"
   },
   "repository": {
     "type": "git",
