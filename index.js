@@ -51,7 +51,7 @@ var rules = {
   },
   choice: function(name, value, array, template) {
     if (!_.contains(array, value)) {
-      var quoted = _.map(array, _s.quote);
+      var quoted = _.map(array, function(text) {return _s.quote(text);});
       var choices = _s.toSentenceSerial(quoted, ', ', ' or ');
       return (template || templates.choice)({choices: choices, name: name});
     }

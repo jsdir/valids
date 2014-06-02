@@ -3,7 +3,7 @@ var assert = require('assert');
 var valids = require('..');
 
 function validatorAssert(validator, value, param, result) {
-  assert.equal(valids[validator]('name', value, param), result);
+  assert.equal(valids.rules[validator]('name', value, param), result);
 }
 
 describe('validators', function() {
@@ -35,11 +35,11 @@ describe('validators', function() {
       'parameter "name" must have a maximum of 1 character');
   });
 
-  it('should validate "in"', function() {
-    validatorAssert('in', 'value', ['foo', 'value'], null);
-    validatorAssert('in', 'value', ['foo', 'bar'],
+  it('should validate "choice"', function() {
+    validatorAssert('choice', 'value', ['foo', 'value'], null);
+    validatorAssert('choice', 'value', ['foo', 'bar'],
       'parameter "name" must be "foo" or "bar"');
-    validatorAssert('in', 'value', ['foo', 'bar', 'baz'],
+    validatorAssert('choice', 'value', ['foo', 'bar', 'baz'],
       'parameter "name" must be "foo", "bar", or "baz"');
   });
 
