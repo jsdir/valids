@@ -144,17 +144,19 @@ function validate(data, options, cb) {
   // Validate fields asynchronously. Do not stop on any field-level validation
   // failures.
   async.each(_.keys(data), function(name, cb) {
-    validateField({
-      schema: options.schema[name],
-      name: name,
-      value: data[name]
-    }, options, function(message) {
-      if (message) {
-        valid = false;
-        messages[name] = message;
-      }
-      cb();
-    });
+    if (name in options.schema) {
+      validateField({
+        schema: options.schema[name],
+        name: name,
+        value: data[name]
+      }, options, function(message) {
+        if (message) {
+          valid = false;
+          messages[name] = message;
+        }
+        cb();
+      });
+    }
   }, function() {
     if (valid) {
       cb(null, data);
