@@ -156,6 +156,8 @@ function validate(data, options, cb) {
         }
         cb();
       });
+    } else {
+      cb();
     }
   }, function() {
     if (valid) {
