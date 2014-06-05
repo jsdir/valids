@@ -114,7 +114,8 @@ describe('#validate()', function() {
   });
 
   it('should validate rules', function(done) {
-    valids.validate({name: 'me', email: 'a@b.c'}, options, function(messages) {
+    var values = {name: 'me', email: 'a@b.c', unspecified: true};
+    valids.validate(values, options, function(messages) {
       assert.equal(messages, null);
       done();
     });
