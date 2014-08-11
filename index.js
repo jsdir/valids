@@ -16,14 +16,14 @@ var patterns = {
 }
 
 var templates = {
-  required: _.template('parameter "<%= name %>" is required'),
-  min: _.template('parameter "<%= name %>" must have a minimum of <%= min %>'),
-  max: _.template('parameter "<%= name %>" must have a maximum of <%= max %>'),
-  choice: _.template('parameter "<%= name %>" must be <%= choices %>'),
-  email: _.template('parameter "<%= name %>" must be a valid email address'),
-  postal_code: _.template('parameter "<%= name %>" must be a valid postal ' +
+  required: _.template('attribute "<%= name %>" is required'),
+  min: _.template('attribute "<%= name %>" must have a minimum of <%= min %>'),
+  max: _.template('attribute "<%= name %>" must have a maximum of <%= max %>'),
+  choice: _.template('attribute "<%= name %>" must be <%= choices %>'),
+  email: _.template('attribute "<%= name %>" must be a valid email address'),
+  postal_code: _.template('attribute "<%= name %>" must be a valid postal ' +
     'code'),
-  username: _.template('parameter "<%= name %>" must only contain letters, ' +
+  username: _.template('attribute "<%= name %>" must only contain letters, ' +
     'numbers, periods, dashes, and underscores')
 }
 

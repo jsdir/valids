@@ -11,7 +11,7 @@ function validatorAssert(validator, value, param, result) {
 describe('validators', function() {
 
   it('should validate "required"', function() {
-    var message = 'parameter "name" is required'
+    var message = 'attribute "name" is required'
     validatorAssert('required', 'value', false, null);
     validatorAssert('required', 'value', true, null);
     validatorAssert('required', null, true, message);
@@ -23,30 +23,30 @@ describe('validators', function() {
     validatorAssert('min', 'value', 4, null);
     validatorAssert('min', 'value', 5, null);
     validatorAssert('min', 'value', 6,
-      'parameter "name" must have a minimum of 6 characters');
+      'attribute "name" must have a minimum of 6 characters');
     validatorAssert('min', '', 1,
-      'parameter "name" must have a minimum of 1 character');
+      'attribute "name" must have a minimum of 1 character');
   });
 
   it('should validate "max"', function() {
     validatorAssert('max', 'value', 6, null);
     validatorAssert('max', 'value', 5, null);
     validatorAssert('max', 'value', 4,
-      'parameter "name" must have a maximum of 4 characters');
+      'attribute "name" must have a maximum of 4 characters');
     validatorAssert('max', 'va', 1,
-      'parameter "name" must have a maximum of 1 character');
+      'attribute "name" must have a maximum of 1 character');
   });
 
   it('should validate "choice"', function() {
     validatorAssert('choice', 'value', ['foo', 'value'], null);
     validatorAssert('choice', 'value', ['foo', 'bar'],
-      'parameter "name" must be "foo" or "bar"');
+      'attribute "name" must be "foo" or "bar"');
     validatorAssert('choice', 'value', ['foo', 'bar', 'baz'],
-      'parameter "name" must be "foo", "bar", or "baz"');
+      'attribute "name" must be "foo", "bar", or "baz"');
   });
 
   it('should validate "email"', function() {
-    var message = 'parameter "name" must be a valid email address';
+    var message = 'attribute "name" must be a valid email address';
     validatorAssert('email', 'fake-email', false, null);
     validatorAssert('email', 'fake-email', true, message);
     validatorAssert('email', 'johndoe@example', true, message);
@@ -55,7 +55,7 @@ describe('validators', function() {
   });
 
   it('should validate "postal_code"', function() {
-    var message = 'parameter "name" must be a valid postal code'
+    var message = 'attribute "name" must be a valid postal code'
     validatorAssert('postal_code', '1234', false, null);
     validatorAssert('postal_code', '1234', true, message);
     validatorAssert('postal_code', '123456', true, message);
@@ -65,7 +65,7 @@ describe('validators', function() {
   });
 
   it('should validate "username"', function() {
-    var message = 'parameter "name" must only contain letters, numbers, ' +
+    var message = 'attribute "name" must only contain letters, numbers, ' +
       'periods, dashes, and underscores';
     validatorAssert('username', 'validUsername', false, null);
     validatorAssert('username', 'validUsername', true, null);
@@ -97,8 +97,8 @@ describe('#validate()', function() {
     var testOptions = {schema: schema};
     valids.validate({}, options, function(messages) {
       assert.deepEqual(messages, {
-        name: 'parameter "name" is required',
-        email: 'parameter "email" is required'
+        name: 'attribute "name" is required',
+        email: 'attribute "email" is required'
       });
       done();
     });
