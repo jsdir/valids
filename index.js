@@ -105,7 +105,7 @@ function validateRuleGroup(group, options, value, cb) {
  */
 function validateField(field, options, cb) {
   // Get a user-friendly display name for the field.
-  var displayName = field.displayName || field.name;
+  var displayName = field.schema.displayName || field.name;
 
   // Get an array of rules grouped by priority with first and last in the
   // array corresponding to first and last in validation order.
