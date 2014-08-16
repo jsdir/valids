@@ -148,7 +148,7 @@ function validate(data, options, cb) {
       validateField({
         schema: options.schema[name],
         name: name,
-        value: data[name]
+        value: data[name] || ''
       }, options, function(message) {
         if (message) {
           valid = false;
