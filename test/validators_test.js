@@ -94,7 +94,6 @@ describe('#validate()', function() {
   var options = {schema: schema};
 
   it('should validate nonexistent fields by default', function(done) {
-    var testOptions = {schema: schema};
     valids.validate({}, options, function(messages) {
       assert.deepEqual(messages, {
         name: 'attribute "name" is required',
