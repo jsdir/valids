@@ -25,16 +25,16 @@ var templates = {
     'code'),
   username: _.template('attribute "<%= name %>" must only contain letters, ' +
     'numbers, periods, dashes, and underscores'),
-  match: _.template('attribute "<%= name %>" does not match "<%= target %>"')
+  match: _.template('attribute "<%= name %>" should match "<%= target %>"')
 }
 
 var rules = {
-  required: function(name, value, active, template) {
+  required: function(name, value, active, data, template) {
     if (active && !value) {
       return (template || templates.required)({name: name});
     }
   },
-  min: function(name, value, min, template) {
+  min: function(name, value, min, data, template) {
     if (value.length < min) {
       return (template || templates.min)({
         name: name,
@@ -42,7 +42,7 @@ var rules = {
       });
     }
   },
-  max: function(name, value, max, template) {
+  max: function(name, value, max, data, template) {
     if (value.length > max) {
       return (template || templates.max)({
         name: name,
@@ -50,31 +50,31 @@ var rules = {
       });
     }
   },
-  choice: function(name, value, array, template) {
+  choice: function(name, value, array, data, template) {
     if (!_.contains(array, value)) {
       var quoted = _.map(array, function(text) {return _s.quote(text);});
       var choices = _s.toSentenceSerial(quoted, ', ', ' or ');
       return (template || templates.choice)({choices: choices, name: name});
     }
   },
-  email: function(name, value, active, template) {
+  email: function(name, value, active, data, template) {
     if (active && !patterns.email.test(value)) {
       return (template || templates.email)({name: name});
     }
   },
-  postal_code: function(name, value, active, template) {
+  postal_code: function(name, value, active, data, template) {
     if (active && !patterns.postal_code.test(value)) {
       return (template || templates.postal_code)({name: name});
     }
   },
-  username: function(name, value, active, template) {
+  username: function(name, value, active, data, template) {
     if (active && !patterns.username.test(value)) {
       return (template || templates.username)({name: name});
     }
   },
-  match: function(name, value, target, template, data) {
+  match: function(name, value, target, data, template) {
     if (value !== data[target]) {
-      return (template || templates.match)({target: target})
+      return (template || templates.match)({name: name, target: target})
     }
   }
 };
@@ -101,7 +101,7 @@ function validateRuleGroup(group, options, value, data, cb) {
       }
 
       message = rules[ruleName](
-        displayName, value, param, messageTemplate, data
+        displayName, value, param, data, messageTemplate
       );
       cb(message);
     }

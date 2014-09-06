@@ -73,6 +73,16 @@ describe('validators', function() {
     validatorAssert('username', 'a1.-_!', true, message);
     validatorAssert('username', ' ', true, message);
   });
+
+  it('should validate "match"', function() {
+    var message = 'attribute "name" should match "target"';
+    assert.equal(valids.rules['match']('name', 'data', 'target', {
+      target: 'data'
+    }), null);
+    assert.equal(valids.rules['match']('name', 'data', 'target', {
+      target: 'random'
+    }), message);
+  });
 });
 
 describe('#validate()', function() {
