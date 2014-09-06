@@ -24,7 +24,8 @@ var templates = {
   postal_code: _.template('attribute "<%= name %>" must be a valid postal ' +
     'code'),
   username: _.template('attribute "<%= name %>" must only contain letters, ' +
-    'numbers, periods, dashes, and underscores')
+    'numbers, periods, dashes, and underscores'),
+  match: _.template('attribute "<%= name %>" does not match "<%= target %>"')
 }
 
 var rules = {
@@ -70,6 +71,11 @@ var rules = {
     if (active && !patterns.username.test(value)) {
       return (template || templates.username)({name: name});
     }
+  },
+  match: function(name, value, target, template, data) {
+    if (value !== data[target]) {
+      return (template || templates.match)({target: target})
+    }
   }
 };
 
@@ -78,7 +84,7 @@ var rules = {
  * validating on first validation failure or error and will pass the message
  * as the error to the callback.
  */
-function validateRuleGroup(group, options, value, cb) {
+function validateRuleGroup(group, options, value, data, cb) {
   var displayName = options.displayName;
   var messages = options.messages;
 
@@ -94,7 +100,9 @@ function validateRuleGroup(group, options, value, cb) {
         messageTemplate = options.messages[ruleName];
       }
 
-      message = rules[ruleName](displayName, value, param, messageTemplate);
+      message = rules[ruleName](
+        displayName, value, param, messageTemplate, data
+      );
       cb(message);
     }
   }, cb);
@@ -103,7 +111,7 @@ function validateRuleGroup(group, options, value, cb) {
 /**
  * Validates a field and stops validating on first validation failure or error.
  */
-function validateField(field, options, cb) {
+function validateField(field, options, data, cb) {
   // Get a user-friendly display name for the field.
   var displayName = field.schema.displayName || field.name;
 
@@ -121,7 +129,7 @@ function validateField(field, options, cb) {
     validateRuleGroup(group, {
       displayName: displayName,
       messages: options.messages
-    }, field.value, cb);
+    }, field.value, data, cb);
   }, cb);
 }
 
@@ -149,7 +157,7 @@ function validate(data, options, cb) {
         schema: options.schema[name],
         name: name,
         value: data[name] || ''
-      }, options, function(message) {
+      }, options, data, function(message) {
         if (message) {
           valid = false;
           messages[name] = message;
